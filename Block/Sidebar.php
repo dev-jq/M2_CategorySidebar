@@ -1,28 +1,8 @@
 <?php namespace Sebwite\Sidebar\Block;
 
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\View\Element\Template;
-
-function array_get(&$array, $key)
-{
-    return array_key_exists($key, $array) ? $array[$key] : null;
-}
-
-function endsWith($haystack, $needle)
-{
-    return substr_compare($haystack, $needle, -strlen($needle)) === 0;
-}
-
-function getParentParentIdFromCategoryPath($path)
-{
-    $pathArray = explode("/", $path);
-    return array_reverse($pathArray)[2] ?: null;
-}
-
-function getParentIdFromCategoryPath($path)
-{
-    $pathArray = explode("/", $path);
-    return array_reverse($pathArray)[1] ?: null;
-}
 
 /**
  * Class:Sidebar
@@ -42,20 +22,30 @@ class Sidebar extends Template
     protected $_coreRegistry;
 
     /** * @var \Magento\Catalog\Model\Indexer\Category\Flat\State */
-    protected $_categoryFlatState;
+    protected $categoryFlatConfig;
 
-    /** * @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory */
+    /** * @var \Magento\Catalog\Model\CategoryFactory */
     protected $_categoryFactory;
 
-    /** @var \Sebwite\Sidebar\Helper\Data */
+    /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection */
+    protected $_productCollectionFactory;
+	
+    /** @var \Magento\Catalog\Helper\Output */
+    private $helper;
+
+	/** @var \Sebwite\Sidebar\Helper\Data */
     private $_dataHelper;
 
+	/** @var \Magento\Framework\App\ObjectManager */
+	private  $objectManager;
     /**
      * @param Template\Context                                        $context
      * @param \Magento\Catalog\Helper\Category                        $categoryHelper
      * @param \Magento\Framework\Registry                             $registry
      * @param \Magento\Catalog\Model\Indexer\Category\Flat\State      $categoryFlatState
-     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory                  $categoryFactory
+     * @param \Magento\Catalog\Model\CategoryFactory                  $categoryFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollectionFactory
+     * @param \Magento\Catalog\Helper\Output                          $helper
      * @param array                                                   $data
      */
     public function __construct(
@@ -63,166 +53,230 @@ class Sidebar extends Template
         \Magento\Catalog\Helper\Category $categoryHelper,
         \Magento\Framework\Registry $registry,
         \Magento\Catalog\Model\Indexer\Category\Flat\State $categoryFlatState,
-        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryFactory,
-        \Sebwite\Sidebar\Helper\Data $dataHelper,
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollectionFactory,
+        \Magento\Catalog\Helper\Output $helper,
+		\Sebwite\Sidebar\Helper\Data $dataHelper,
         $data = [ ]
-    ) {
+    )
+    {
         $this->_categoryHelper           = $categoryHelper;
         $this->_coreRegistry             = $registry;
-        $this->_categoryFlatState        = $categoryFlatState;
+        $this->categoryFlatConfig        = $categoryFlatState;
         $this->_categoryFactory          = $categoryFactory;
-        $this->_dataHelper = $dataHelper;
+        $this->_productCollectionFactory = $productCollectionFactory;
+        $this->helper                    = $helper;
+		$this->_dataHelper = $dataHelper;
+		
+		$this->objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
         parent::__construct($context, $data);
+		setlocale(LC_ALL, 'pl_PL');
     }
-
-    public function getCategoryDepthLevel()
-    {
-        return $this->_dataHelper->getCategoryDepthLevel();
-    }
-
+	
     /**
      * Get all categories
      *
-     * @return \Magento\Framework\Data\Tree\Node\Collection
+     * @param bool $sorted
+     * @param bool $asCollection
+     * @param bool $toLoad
+     *
+     * @return array|\Magento\Catalog\Model\ResourceModel\Category\Collection|\Magento\Framework\Data\Tree\Node\Collection
      */
-    public function getCategories()
+    public function getCategories($sorted = false, $asCollection = false, $toLoad = true)
     {
-        $currentCategory = $this->_coreRegistry->registry('current_category');
-        $currentCategoryId = $currentCategory ? $currentCategory->getId() : 1;
-
-        $cacheKey = sprintf('%d', $currentCategoryId);
-        if (isset($this->_storeCategories[ $cacheKey ])) {
+        $cacheKey = sprintf('%d-%d-%d-%d', $this->getSelectedRootCategory(), $sorted, $asCollection, $toLoad);
+        if ( isset($this->_storeCategories[ $cacheKey ]) )
+        {
             return $this->_storeCategories[ $cacheKey ];
         }
 
-        $rootCategoryId = $this->getRootCategoryId();
-        $collection = $this->_categoryFactory
-            ->create()
-            ->addAttributeToSelect('*')
-            ->addIsActiveFilter();
-        $rootCategory = $rootCategoryId == 1
-            ? array_values(
-                $collection->addRootLevelFilter()->getItems()
-            )[0]
-            : $collection->getItems()[$rootCategoryId];
-        $categories = $rootCategory
-            ->getChildrenCategories()
-            ->getItems();
+        /**
+         * Check if parent node of the store still exists
+         */
+        $category = $this->_categoryFactory->create();
+		
+		$categoryDepthLevel = $this->_dataHelper->getCategoryDepthLevel();
 
-        if ($this->_dataHelper->getSidebarCategory() == 'current_category_parent_siblings_and_children') {
-            if (!$currentCategory) {
-                $categories = [];
-            } else {
-                $currentCategoryPath = $currentCategory->getPath();
-                $parentId = $currentCategoryPath ? getParentIdFromCategoryPath($currentCategoryPath) : null;
-                if (!$parentId || $parentId == 2 || $parentId == 1) {
-                    // In this case, there's no sense to show the parent, as it's "Default Category";
-                    // nor the parent siblings, as usually they are shown in the theme's main navigation anyways,
-                    // so we'll just show the current category and its' children.
-                    $rootCategory = array_get($categories, $currentCategoryId)
-                        ?: (
-                            array_get($categories, 2)
-                            ?: array_get($categories, 1)
-                        )->getChildrenCategories()->getItems()[ $currentCategoryId ];
-                    $categories = [ $rootCategory ];
-                } else {
-                    $categories = [
-                        $categories[$parentId] ?: $categories[$currentCategoryId]
-                    ];
-                }
-            }
-        }
+        $storeCategories = $category->getCategories($this->getSelectedRootCategory(), $recursionLevel = $categoryDepthLevel, $sorted, $asCollection, $toLoad);
 
-        $this->_storeCategories[ $cacheKey ] = $categories;
+		$sorted = array();
+			
+		foreach ( $storeCategories as $childCategory )
+		{
+			$sorted[$childCategory->getName()] = $childCategory;
+		}
+			
+		ksort($sorted, SORT_LOCALE_STRING );
+		
+        $this->_storeCategories[ $cacheKey ] = $sorted;
 
-        return $categories;
+        return $sorted;
     }
 
     /**
-     * @return int
+     * getSelectedRootCategory method
+     *
+     * @return int|mixed
      */
-    private function getRootCategoryId()
+    public function getSelectedRootCategory()
     {
-        $sidebarCategory = $this->_dataHelper->getSidebarCategory();
+		return 3;
+        $category = $this->_scopeConfig->getValue(
+            'sebwite_sidebar/general/category'
+        );
 
-        if ($sidebarCategory == 'current_category_children') {
-            $currentCategory = $this->_coreRegistry->registry('current_category');
-            if ($currentCategory) {
-                return $currentCategory->getId();
-            }
+		if ( $category == 'current_category_children'){
+			$currentCategory = $this->_coreRegistry->registry('current_category');
+			if($currentCategory){
+				return $currentCategory->getId();
+			}
+			return 1;
+		}
+		
+		if ( $category == 'current_category_parent_children'){
+			$currentCategory = $this->_coreRegistry->registry('current_category');
+			if($currentCategory){
+				$topLevelParent = $currentCategory->getPath();
+				$topLevelParentArray = explode("/", $topLevelParent);
+				if(isset($topLevelParent)){
+					return $topLevelParentArray[2];
+				}
+			}
+			return 1;
+		}		
+		
+        if ( $category === null )
+        {
             return 1;
         }
 
-        if ($sidebarCategory == 'current_category_parent_children'
-          || $sidebarCategory == 'current_category_parent_siblings_and_children') {
-            $currentCategory = $this->_coreRegistry->registry('current_category');
-            $currentCategoryPath = $currentCategory ? $currentCategory->getPath() : null;
-            // To get the current category's parent,
-            // we need to query for parent's parent's children.
-            // If not found, just use 1 to get all children of `Default Category`.
-            $parentParentId = $currentCategoryPath ? getParentParentIdFromCategoryPath($currentCategoryPath) : null;
-            return $parentParentId ?: 1;
-        }
+        return $category;
+    }
 
-        return (int) $sidebarCategory ?: 1;
+    /**
+     * @param        $category
+     * @param string $html
+     * @param int    $level
+     *
+     * @return string
+     */
+    public function getChildCategoryView($category, $html = '', $level = 1)
+    {
+		$childCategories = $category->getChildrenCategories();
+		
+        // Check if category has children
+        if ( !empty($childCategories) )
+        {
+			$sorted = array();
+			
+			foreach ( $childCategories as $childCategory )
+			{
+				$sorted[$childCategory->getName()] = $childCategory;
+			}
+			
+			ksort($sorted, SORT_LOCALE_STRING );
+			
+            if ( count($sorted) > 0 )
+            {
+                $html .= '<ul class="o-list o-list--unstyled">';
+
+                // Loop through children categories
+                foreach ( $sorted as $childCategory )
+                {
+                    $html .= '<li class="level' . $level . ($this->isActive($childCategory) ? ' active' : '') . '">';
+                    $html .= '<a href="' . $this->getCategoryUrl($childCategory) . '" title="' . $childCategory->getName() . '" class="' . ($this->isActive($childCategory) ? 'is-active' : '') . '">' . $childCategory->getName() . '</a>';
+
+                    if ( !empty($childCategory->getChildrenCategories()) )
+                    {
+                        if ( $this->isActive($childCategory) )
+                        {
+                            $html .= '<span class="expanded"><i class="fa fa-angle-down"></i></span>';
+                        }
+                        else
+                        {
+                            $html .= '<span class="expand"><i class="fa fa-angle-up"></i></span>';
+                        }
+						
+                        $html .= $this->getChildCategoryView($childCategory, '', ($level + 1));
+                    }
+
+                    $html .= '</li>';
+                }
+                $html .= '</ul>';
+            }
+			else
+			{
+				$html .= '<span style="">!</span>';
+			}
+        }
+		else
+		{
+			$html .= '<span style="">*</span>';
+		}
+
+        return $html;
     }
 
     /**
      * Retrieve subcategories
-     *
+	 *
      * @param $category
      *
      * @return array
      */
     public function getSubcategories($category)
     {
-        // TODO check if it works on flat category config
+        if ( $this->categoryFlatConfig->isFlatEnabled() && $category->getUseFlatResource() )
+        {
+            return (array)$category->getChildrenNodes();
+        }
 
-        return $category->getChildrenCategories()->getItems();
+        return $category->getChildren();
     }
+	
 
-    public function isCurrentCategoryOrParentOfCurrentCategory($category)
+    /**
+     * Get current category
+     *
+     * @param \Magento\Catalog\Model\Category $category
+     *
+     * @return Category
+     */
+    public function isActive($category)
     {
-        $currentCategory = $this->_coreRegistry->registry('current_category');
-        $currentProduct  = $this->_coreRegistry->registry('current_product');
+        $activeCategory = $this->_coreRegistry->registry('current_category');
+        $activeProduct  = $this->_coreRegistry->registry('current_product');
 
-        if (!$currentCategory) {
+        if ( !$activeCategory )
+        {
+
             // Check if we're on a product page
-            if ($currentProduct !== null) {
-                return in_array($category->getId(), $currentProduct->getCategoryIds());
+            if ( $activeProduct !== null )
+            {
+                return in_array($category->getId(), $activeProduct->getCategoryIds());
             }
 
             return false;
         }
 
-        // If the current category's path includes the whole path of that given category path,
-        // it probably means the current category is either that directory, or a child of it.
-        return strpos('/' . $currentCategory->getPath() . '/', '/' . $category->getPath() . '/') !== false;
-    }
-
-    public function isCurrentCategory($category)
-    {
-        $currentCategory = $this->_coreRegistry->registry('current_category');
-        if (!$currentCategory) {
-            return false;
+        // Check if this is the active category
+        if ( $this->categoryFlatConfig->isFlatEnabled() && $category->getUseFlatResource() AND
+            $category->getId() == $activeCategory->getId()
+        )
+        {
+            return true;
         }
 
-        if ($currentCategory->getId() != $category->getId()) {
-            return false;
+        // Check if a subcategory of this category is active
+        $childrenIds = $category->getAllChildren(true);
+        if ( !is_null($childrenIds) AND in_array($activeCategory->getId(), $childrenIds) )
+        {
+            return true;
         }
 
-        // If the current category's path ends with that given category's path,
-        // it probably means we're at the same path.
-        return endsWith($currentCategory->getPath(), $category->getPath());
-    }
-
-    /**
-     * @deprecated
-     */
-    public function isActive($category)
-    {
-        return $this->isCurrentCategoryOrParentOfCurrentCategory($category);
+        // Fallback - If Flat categories is not enabled the active category does not give an id
+        return (($category->getName() == $activeCategory->getName()) ? true : false);
     }
 
     /**
