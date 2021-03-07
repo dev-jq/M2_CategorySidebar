@@ -1,18 +1,22 @@
 .sidebar {
     .expand,
     .expanded {
-        cursor: pointer;
         float: right;
     }
     .o-list {
+		.0-list--unstyled {
+			border-left: 1px solid #f0f0f0;
+		}
         display: block;
         margin-top: 20px;
         margin-bottom: 0px;
         padding-left: 0px;
         li {
+			cursor: pointer;
             list-style: none;
             border-bottom: 1px solid #ededed;
             padding-bottom: 10px;
+			
             &.active {
                 > ul {
                     display: block;
@@ -30,8 +34,8 @@
                 display: inline-block;
             }
             > ul {
-                padding-top: 15px;
-                margin-top: 0px;
+                padding-top: 0px;
+                margin-top: 10px;
                 display: none;
             }
         }
@@ -54,4 +58,10 @@
         padding-right: 45px;
         margin-bottom: 30px;
     }
+	
+	a {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: #333333;
+	}
 }
