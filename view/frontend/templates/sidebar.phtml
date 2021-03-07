@@ -8,63 +8,35 @@ $isEnabled     = $block->isEnabled();
 $titleText     = $block->getTitleText();
 $isOpenOnLoad  = $block->isOpenOnLoad();
 $categories    = $block->getCategories();
-$maxLevel = $block->getCategoryDepthLevel();
 
-function renderCategoryListElement($block, $category, $maxLevel, $level = 0)
-{
-    $isActive = $block->isCurrentCategoryOrParentOfCurrentCategory($category);
-    $isCurrent = $block->isCurrentCategory($category);
-
-    $html = '<li class="level' . $level . ($isActive ? ' active' : '') . '">';
-    $html .= '<a href="' . $block->getCategoryUrl($category) . '" title="' . $category->getName() . '" class="' . ($isActive ? 'is-active' : '') . ' ' . ($isCurrent ? 'is-current' : '') . '">' . $category->getName() . '</a>';
-
-    if ($category->hasChildren() && $level < $maxLevel) {
-        if ($isActive) {
-            $html .= '<span class="expanded"><i class="fa fa-minus"></i></span>';
-        } else {
-            $html .= '<span class="expand"><i class="fa fa-plus"></i></span>';
-        }
-
-        $html .= renderCategoryChildren($block, $category, $maxLevel, $level + 1);
-    }
-
-    $html .= '</li>';
-
-    return $html;
-}
-
-function renderCategoryChildren($block, $category, $maxLevel, $level = 0)
-{
-    $childCategories = $block->getSubcategories($category);
-    if (count($childCategories) == 0) {
-        return '';
-    }
-
-    $html = '<ul class="o-list o-list--unstyled">';
-    foreach ($childCategories as $childCategory) {
-        $html .= renderCategoryListElement($block, $childCategory, $level);
-    }
-    $html .= '</ul>';
-
-    return $html;
-}
-
-if ($isEnabled && count($categories) > 0) {
-    ?>
+if ($isEnabled) {
+?>
 
     <h3><?= $titleText; ?></h3>
     <ul class="o-list">
-        <?php
-        foreach ($categories as $category) {
-            echo renderCategoryListElement($block, $category, $maxLevel);
-        } ?>
+
+    <?php
+    // Loop through categories
+    foreach ( $categories as $category ) :
+        ?>
+        <li class="level0<?php echo($block->isActive($category) ? ' active' : ''); ?>">
+            <a href="<?php echo $block->getCategoryUrl($category); ?>" title="<?php echo $category->getName(); ?>" class="<?php echo($block->isActive($category) ? ' active' : ''); ?>">
+                <?php echo $category->getName(); ?>
+            </a>
+            <?php if ( $category->hasChildren() ) : ?>
+                <span class="expand"><?php echo $block->isActive($category) ? '<i class="fa fa-angle-up"></i>' : '<i class="fa fa-angle-down"></i>'; ?></span>
+            <?php endif; ?>
+
+            <?php echo $block->getChildCategoryView($category); ?>
+        </li>
+    <?php endforeach; ?>
     </ul>
 <?php if ($isOpenOnLoad) { ?>
     <script>
         require(['jquery', 'sidebarmodule'], function($) {
             $('.is-active').parents('ul').css('display','block');
             $('.is-active').parents('li').addClass('active');
-            $('.is-active').parents('li').find('> span i').removeClass('fa-plus').addClass('fa-minus');
+            $('.is-active').parents('li').find('> span i').removeClass('fa-angle-down').addClass('fa-angle-up');
         });
     </script>
 <?php } else { ?>
