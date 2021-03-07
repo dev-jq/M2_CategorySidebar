@@ -3,8 +3,8 @@
  ========================================================================== */
 require(['jquery'], function ($) {
     $(function () {
-        $('.sidebar').on('click', '.o-list .expand, .o-list .expanded', function () {
-            var element = $(this).parent('li');
+        $('.sidebar').on('click', '.o-list li', function () {
+            var element = $(this);
 
             if (element.hasClass('active')) {
                 element.find('ul').slideUp();
@@ -12,12 +12,12 @@ require(['jquery'], function ($) {
                 element.removeClass('active');
                 element.find('li').removeClass('active');
 
-                element.find('i').removeClass('fa-minus').addClass('fa-plus');
+                element.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
             } else {
                 element.children('ul').slideDown();
                 element.siblings('li').children('ul').slideUp();
-                element.parent('ul').find('i').removeClass('fa-minus').addClass('fa-plus');
-                element.find('> span i').removeClass('fa-plus').addClass('fa-minus');
+                element.parent('ul').find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+                element.find('> span i').removeClass('fa-angle-up').addClass('fa-angle-down');
 
                 element.addClass('active');
                 element.siblings('li').removeClass('active');
