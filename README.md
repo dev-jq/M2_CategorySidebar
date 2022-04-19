@@ -1,25 +1,21 @@
-# Magento 2.4s Category Sidebar extension
-![Alt text](header.jpg?raw=true "Magento2 Category sidebar")
+# Category Sidebar for Magebto 2 
 
-This extension will add the ability to show category tree from a parent or current category in a sidebar. The category can be selected from the Magento2 admin config page.
+This extension will add the ability to show category tree sidebar (on category page and search result page). The module has configuration options in the Magento 2 admin config page.
 
 ## Installation with composer
-* Include the repository: `composer require patryk9200/magento2-category-sidebar`
-* Enable the extension: `php bin/magento --clear-static-content module:enable Sebwite_Sidebar`
-* Upgrade db scheme: `php bin/magento setup:upgrade`
-* Clear cache
+* (in progress...)
 
 ## Installation without composer
 * Download zip file of this extension
-* Place all the files of the extension in your Magento 2 installation in the folder `app/code/Sebwite/Sidebar`
-* Enable the extension: `php bin/magento --clear-static-content module:enable Sebwite_Sidebar`
+* Place all the files of the extension in your Magento 2 installation in the folder `app/code/JQ/CategorySidebar`
+* Enable the extension: `php bin/magento --clear-static-content module:enable JQ_CategorySidebar`
 * Upgrade db scheme: `php bin/magento setup:upgrade`
 * Clear cache
 
 ## Configuration
-* Select the root category or current category option you want to use from the config page from the admin panel
+* Enable module 
+* Decide whether to show the title of the "Categories" block
+* Select the type of category tree ( Default Category / Current Category Children / Current Category Parent Children / Only Branch of Current Category )
+* You can show (or hide) the number of products in a given category, e.g. Jackets (20)
 * Select children depth level
 * Categories will appear in col.left sidebar of the theme
-
----
-[![Alt text](https://www.sebwite.nl/wp-content/themes/sebwite/assets/images/logo-sebwite.png "Sebwite.nl")](https://sebwite.nl)
