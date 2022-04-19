@@ -1,29 +1,28 @@
-.sidebar {
-    .expand,
-    .expanded {
-        float: right;
+.cat-sidebar {
+    > .cat-list {
+        padding-left: 0;
+        margin: 10px 0 30px;
     }
-    .o-list {
-		.0-list--unstyled {
-			border-left: 1px solid #f0f0f0;
-		}
+
+    .cat-list {
         display: block;
-        margin-top: 20px;
-        margin-bottom: 0px;
-        padding-left: 0px;
+
+        margin-bottom: 0;
         li {
-			cursor: pointer;
             list-style: none;
-            border-bottom: 1px solid #ededed;
-            padding-bottom: 10px;
-			
+            margin-top: 0;
+            margin-bottom: 1rem;
             &.active {
+                > a {
+                    font-weight: bold;
+                        color: #000;
+                }
                 > ul {
                     display: block;
                     li:last-of-type {
-                        border-bottom: 0px;
-                        padding-bottom: 0px;
-                        margin-bottom: 0px;
+                        border-bottom: 0;
+                        padding-bottom: 0;
+                        margin-bottom: 0;
                     }
                 }
             }
@@ -34,34 +33,33 @@
                 display: inline-block;
             }
             > ul {
-                padding-top: 0px;
-                margin-top: 10px;
-                display: none;
+                padding-top: 1rem;
+                padding-left: 0;
+                margin-top: 0;
+            }
+            &.empty {
+                & > span {
+                    opacity: 0.3;
+                    display: inline-block;
+                    .product-count {
+                        opacity: 1;
+                    }
+                }
             }
         }
-        .level0 {
-            list-style: none;
-        }
-        .level1 a {
-            padding-left: 15px;
-        }
-        .level2 a {
-            padding-left: 30px;
-        }
-        .level3 a {
-            padding-left: 45px;
+        .product-count {
+            opacity: 0.5;
         }
     }
-    > .o-list {
-        display: block;
-        margin-top: 30px;
-        padding-right: 45px;
-        margin-bottom: 30px;
+
+    li > ul.cat-list {
+        margin-left: 15px;
     }
-	
-	a {
-		font-size: 1.2rem;
-		font-weight: 600;
-		color: #333333;
-	}
+
+}
+
+@media screen and (max-width: 767px) {
+    .cat-sidebar {
+        display: none;
+    }
 }

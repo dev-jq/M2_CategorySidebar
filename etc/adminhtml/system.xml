@@ -2,42 +2,38 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="sebwite" sortOrder="200">
-            <label>Sebwite</label>
+        <tab id="jq91" translate="label" sortOrder="1">
+            <label>JQ</label>
         </tab>
-        <section id="sebwite_sidebar" showInDefault="1">
-            <tab>sebwite</tab>
-            <label>Sidebar CMS Menu</label>
+        <section id="categorysidebar" showInDefault="1" sortOrder="2">
+            <tab>jq91</tab>
+            <label>Category Sidebar</label>
             <resource>Magento_Config::config</resource>
-            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0"
-                   showInStore="0">
-                <label>Sidebar settings</label>
-                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0"
-                       showInStore="0">
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Category Sidebar Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Is Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0"
-                       showInStore="0">
-                    <label>Title text above menu</label>
-                </field>
-                <field id="category" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0"
-                       showInStore="0">
-                    <label>Select Sidebar Category</label>
-                    <source_model>Sebwite\Sidebar\Model\Config\Source\Categories</source_model>
-                </field>
-                <field id="categorydepth" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0"
-                       showInStore="0">
-                    <label>Select Category Depth</label>
-                    <source_model>Sebwite\Sidebar\Model\Config\Source\Depth</source_model>
-                </field>
-                <field id="open" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0"
-                       showInStore="0">
-                    <label>Open to reveal active link on page load?</label>
+
+                <field id="title" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Show block title</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="fixed">1</field>
-                    </depends>
+                </field>
+
+                <field id="category" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Select Category Sidebar</label>
+                    <source_model>JQ\CategorySidebar\Model\Config\Source\Categories</source_model>
+                </field>
+
+                <field id="productcount" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display category product count</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="categorydepth" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Select Category Depth</label>
+                    <source_model>JQ\CategorySidebar\Model\Config\Source\Depth</source_model>
                 </field>
             </group>
         </section>

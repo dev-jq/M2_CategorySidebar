@@ -1,15 +1,14 @@
-<?php namespace Sebwite\Sidebar\Model\Config\Source;
+<?php
 
 /**
- * Class:Categories
- * Sebwite\Sidebar\Model\Config\Source
- *
- * @author      Vasilis Vasiloudis
- * @package     Sebwite\Sidebar
- * @copyright   Copyright (c) 2016, vvasiloud. All rights reserved
- */
-class Depth implements \Magento\Framework\Option\ArrayInterface
-{
+ * @author JQ
+ * @copyright Copyright (c) 2022 JQ
+ * @package JQ_CategorySidebar
+*/
+
+namespace JQ\CategorySidebar\Model\Config\Source;
+
+class Depth implements \Magento\Framework\Option\ArrayInterface {
 
     /**
      * Return array of options as value-label pairs
@@ -38,18 +37,6 @@ class Depth implements \Magento\Framework\Option\ArrayInterface
             [
                 'value' => 5,
                 'label' => __('5'),
-            ],
-            [
-                'value' => 6,
-                'label' => __('6'),
-            ],
-            [
-                'value' => 7,
-                'label' => __('7'),
-            ],
-            [
-                'value' => 8,
-                'label' => __('8'),
             ],
         ];
     }

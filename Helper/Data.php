@@ -1,39 +1,33 @@
 <?php
-/**
- * Class:Categories
- * Sebwite\Sidebar\Model\Config\Source
- *
- * @author      Vasilis Vasiloudis
- * @package     Sebwite\Sidebar
- * @copyright   Copyright (c) 2016, vvasiloud. All rights reserved
- */
-namespace Sebwite\Sidebar\Helper;
 
-use Magento\Framework\Module\ModuleListInterface;
+/**
+ * @author JQ
+ * @copyright Copyright (c) 2022 JQ
+ * @package JQ_CategorySidebar
+ */
+
+namespace JQ\CategorySidebar\Helper;
+
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    const XML_PATH_ENABLED    		 			= 'general/enabled';
-    const XML_PATH_CATEGORY    		 			= 'general/category';
-    const XML_PATH_CATEGORY_DEPTH_LEVEL    		= 'general/categorydepth';
-    const XML_PATH_TITLE_TEXT    		        = 'general/title';
-    const XML_PATH_OPEN_ON_LOAD    		        = 'general/open';
-
+    const XML_PATH_ENABLED                      = 'general/enabled';
+    const XML_PATH_CATEGORY                     = 'general/category';
+    const XML_PATH_CATEGORY_DEPTH_LEVEL         = 'general/categorydepth';
 
     /**
-     * @var ModuleListInterface
+     * @var ScopeConfigInterface
      */
-    protected $_moduleList;
+    protected $_scopeConfig;
 
     /**
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param ModuleListInterface $moduleList
+     * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
-        ModuleListInterface $moduleList
+    public function __construct(\Magento\Framework\App\Helper\Context $context, ScopeConfigInterface $scopeConfig
     ) {
-        $this->_moduleList              = $moduleList;
+        $this->_scopeConfig = $scopeConfig;
         parent::__construct($context);
     }
 
@@ -43,18 +37,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @return string
      */
-    public function getConfigPath(
-        $xmlPath,
-        $section = 'sebwite_sidebar'
-    ) {
+    public function getConfigPath($xmlPath, $section = 'categorysidebar')
+    {
         return $section . '/' . $xmlPath;
     }
 
-    /**
-    * Check if enabled
-    *
-    * @return string|null
-    */
+	 /**
+     * Check if enabled
+     *
+     * @return string|null
+     */
     public function isEnabled()
     {
         return $this->scopeConfig->getValue(
@@ -63,11 +55,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
-    /**
-    * Get sidebar category
-    *
-    * @return string|null
-    */
+	 /**
+     * Get Category CategorySidebar
+     *
+     * @return string|null
+     */
     public function getSidebarCategory()
     {
         return $this->scopeConfig->getValue(
@@ -76,11 +68,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
-    /**
-    * Get category depth level
-    *
-    * @return string|null
-    */
+	 /**
+     * Get category depth level
+     *
+     * @return string|null
+     */
     public function getCategoryDepthLevel()
     {
         return $this->scopeConfig->getValue(
@@ -89,29 +81,4 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
-    /**
-    * Get title text
-    *
-    * @return string|null
-    */
-    public function getTitleText()
-    {
-        return $this->scopeConfig->getValue(
-            $this->getConfigPath(self::XML_PATH_TITLE_TEXT),
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-    }
-
-    /**
-    * Get is open on load?
-    *
-    * @return string|null
-    */
-    public function isOpenOnLoad()
-    {
-        return $this->scopeConfig->getValue(
-            $this->getConfigPath(self::XML_PATH_OPEN_ON_LOAD),
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-    }
 }

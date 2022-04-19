@@ -1,0 +1,36 @@
+<?php
+/**
+ * Category sidebar
+ *
+ * @var $block JQ\CategorySidebar\Block\CategorySidebar
+ */
+?>
+
+<?php $categories = $block->getCategories(); ?>
+<?php if($categories) : ?>
+    <?php $categoryBlockTitle = $this->getCatTitle(); ?>
+    <?php $categoryDepth = $this->getCatLavel(); ?>
+    <div class="block cat-sidebar">
+        <?php if($categoryBlockTitle): ?>
+            <div class="block-title">
+                <strong><?= __('Categories'); ?></strong>
+            </div>
+        <?php endif; ?>
+        <ul class="cat-list" <?php if($categoryBlockTitle): ?>style="padding-left: 15px"<?php endif; ?>>
+            <?php foreach ($categories as $category) : ?>
+                <?php
+                    if($this->getShowProductCount()) {
+                        $categoryProductCount = ' <span class="product-count">(' . $this->getCategoryProductCount($category->getId()) . ')</span>';
+                    } else {
+                        $categoryProductCount = '';
+                    }
+                ?>
+                <li class="level1" data-cat-id="<?= $category->getId(); ?>">
+                    <a href="<?= $block->getCategoryUrl($category); ?>" title="<?= $category->getName(); ?>">
+                        <?= $category->getName().$categoryProductCount; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

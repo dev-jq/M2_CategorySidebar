@@ -1,0 +1,51 @@
+<?php
+/**
+ * Category sidebar
+ *
+ * @var $block JQ\CategorySidebar\Block\CategorySidebar
+ */
+?>
+
+<?php $helper = $this->helper('JQ\CategorySidebar\Helper\Data'); ?>
+<?php $categories = $block->getCategories(); ?>
+<?php if($categories) : ?>
+    <?php $categoryBlockTitle = $this->getCatTitle(); ?>
+    <?php $categoryDepth = $this->getCatLavel(); ?>
+    <div class="block cat-sidebar">
+        <?php if($categoryBlockTitle): ?>
+            <div class="block-title">
+                <strong><?= __('Categories'); ?></strong>
+            </div>
+        <?php endif; ?>
+        <ul class="cat-list" <?php if($categoryBlockTitle): ?>style="padding-left: 15px"<?php endif; ?>>
+            <?php foreach ($categories as $category) : ?>
+                <?php
+                    $level = $category->getLevel();
+                    $activeCategoryPath = $block->getCurrentCategoryPath();
+                    $thisCategoryPath = $category->getData('path');
+
+                    if($this->getShowProductCount()) {
+                        $categoryProductCount = ' <span class="product-count">(' . $this->getCategoryProductCount($category->getId()) . ')</span>';
+                    } else {
+                        $categoryProductCount = '';
+                    }
+                ?>
+                <?php if($block->getPathSegment($activeCategoryPath, 3) == $block->getPathSegment($thisCategoryPath, 3)): ?>
+                    <li class="level1<?= ($block->isActive($category) ? ' active' : ''); ?>" data-cat-id="<?= $category->getId(); ?>">
+                        <a href="<?= $block->getCategoryUrl($category); ?>" title="<?= $category->getName(); ?>" <?= ($block->isActive($category) ? 'class="active"' : ''); ?>>
+                            <?= $category->getName().$categoryProductCount; ?>
+                        </a>
+                        <?= $block->getChildCategoryView($category); ?>
+                    </li>
+                <?php elseif($helper->getSidebarCategory() != 'current_category_branch_only'): ?>
+                    <li class="level1<?= ($block->isActive($category) ? ' active' : ''); ?>" data-cat-id="<?= $category->getId(); ?>">
+                        <a href="<?= $block->getCategoryUrl($category); ?>" title="<?= $category->getName(); ?>" <?= ($block->isActive($category) ? 'class="active"' : ''); ?>>
+                            <?= $category->getName().$categoryProductCount; ?>
+                        </a>
+                        <?= $block->getChildCategoryView($category); ?>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

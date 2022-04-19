@@ -1,15 +1,19 @@
-<?php namespace Sebwite\Sidebar\Model\Config\Source;
+<?php
+
+/**
+ * @author JQ
+ * @copyright Copyright (c) 2022 JQ
+ * @package JQ_CategorySidebar
+*/
+
+namespace JQ\CategorySidebar\Model\Config\Source;
 
 /**
  * Class:Categories
- * Sebwite\Sidebar\Model\Config\Source
+ * JQ\CategorySidebar\Model\Config\Source
  *
- * @author      Sebwite
- * @package     Sebwite\Sidebar
- * @copyright   Copyright (c) 2015, Sebwite. All rights reserved
  */
-class Categories implements \Magento\Framework\Option\ArrayInterface
-{
+class Categories implements \Magento\Framework\Option\ArrayInterface {
 
     /**
      * Store categories cache
@@ -53,13 +57,13 @@ class Categories implements \Magento\Framework\Option\ArrayInterface
         $this->_storeCategories[$cacheKey] = $storeCategories;
 
         $resultArray = [];
-        foreach ($storeCategories as $category) {
-            $resultArray[$category->getId()] = $category->getName();
+        foreach($storeCategories as $category) {
+            $resultArray[$category->getId()] = __($category->getName());
         }
 
 		$resultArray['current_category_children'] = __('Current Category Children');
 		$resultArray['current_category_parent_children'] = __('Current Category Parent Children');
-		$resultArray['current_category_parent_siblings_and_children'] = __('Current Category Parent, Siblings and Children');
+        $resultArray['current_category_branch_only'] = __('Only Branch of Current Category');
 
         return $resultArray;
     }

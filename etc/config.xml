@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
 	<default>
-		<sidebar>
+		<categorysidebar>
 			<general>
 				<enabled>1</enabled>
-				<categorydepth>1</categorydepth>
+				<title>1</title>
+				<category>2</category>
+				<productcount>1</productcount>
+				<categorydepth>5</categorydepth>
 			</general>
-		</sidebar>
+		</categorysidebar>
 	</default>
 </config>

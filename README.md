@@ -1,6 +1,10 @@
-# Category Sidebar for Magebto 2 
+# Category Sidebar for Magento 2 
 
-This extension will add the ability to show category tree sidebar (on category page and search result page). The module has configuration options in the Magento 2 admin config page.
+This extension will add the ability to show category tree sidebar on category page and search result page. The module has configuration options in the Magento 2 admin config page.
+
+![CategorySidebar Tree Modes](https://github.com/jq91/M2_CategorySidebar/blob/master/README-assets/tree-modes.png)
+
+![CategorySidebar Search Results page](https://github.com/jq91/M2_CategorySidebar/blob/master/README-assets/search-page.png)
 
 ## Installation with composer
 * (in progress...)
@@ -19,3 +23,5 @@ This extension will add the ability to show category tree sidebar (on category p
 * You can show (or hide) the number of products in a given category, e.g. Jackets (20)
 * Select children depth level
 * Categories will appear in col.left sidebar of the theme
+
+![CategorySidebar Search Results page](https://github.com/jq91/M2_CategorySidebar/blob/master/README-assets/config.png)
