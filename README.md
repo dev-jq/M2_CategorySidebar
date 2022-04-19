@@ -21,7 +21,7 @@ This extension will add the ability to show category tree sidebar on category pa
 * Decide whether to show the title of the "Categories" block
 * Select the type of category tree ( Default Category / Current Category Children / Current Category Parent Children / Only Branch of Current Category )
 * You can show (or hide) the number of products in a given category, e.g. Jackets (20)
-* Select children depth level
+* Select children depth level (1 - 5)
 * Categories will appear in col.left sidebar of the theme
 
 ![CategorySidebar Search Results page](https://github.com/jq91/M2_CategorySidebar/blob/master/README-assets/config.png)
