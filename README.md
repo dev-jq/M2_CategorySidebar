@@ -7,7 +7,10 @@ This extension will add the ability to show category tree sidebar on category pa
 ![CategorySidebar Search Results page](https://github.com/jq91/M2_CategorySidebar/blob/master/README-assets/search-page.png)
 
 ## Installation with composer
-* (in progress...)
+* Include the repository: composer require jq91/module-category-sidebar
+* Enable the extension: php bin/magento --clear-static-content module:enable JQ_CategorySidebar
+* Upgrade db scheme: php bin/magento setup:upgrade
+* Clear cache
 
 ## Installation without composer
 * Download zip file of this extension
