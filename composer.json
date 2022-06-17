@@ -1,5 +1,5 @@
 {
-    "name": "jq91/module-category-sidebar",
+    "name": "jq-dev/module-category-sidebar",
     "description": "Magento 2 Module to display category tree in sidebar",
     "minimum-stability": "stable",
     "require": {
@@ -11,7 +11,7 @@
         }
     ],
     "type": "magento2-module",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "autoload": {
         "psr-4": {
             "JQ\\CategorySidebar\\": ""
