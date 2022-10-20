@@ -124,7 +124,7 @@ class CategorySidebar extends Template
         return $category;
     }
 
-    public function getChildCategoryView($category, string $html = '', int $level = 2): bool|string
+    public function getChildCategoryView($category, string $html = '', int $level = 2, $prefix = null): bool|string
     {
         $categorydepth = $this->getCatLevel();
         if($level > $categorydepth){
@@ -145,7 +145,7 @@ class CategorySidebar extends Template
                 // Loop through children categories
                 foreach ($childCategories as $childCategory)
                 {
-                    if($this->getShowProductCount()) {
+                    if($this->getShowProductCount() && !$prefix) {
                         $categoryProductCount = ' <span class="product-count">(' . $this->getCategoryProductCount($childCategory->getId()) . ')</span>';
                     } else {
                         $categoryProductCount = '';
@@ -155,12 +155,12 @@ class CategorySidebar extends Template
                     if ($this->isEmptyCategory($childCategory->getId())) {
                         $html .= sprintf("<span%s title=\"%s\">%s%s</span>", $this->isActive($childCategory) ? ' class="is-active"' : '', __('Empty Category'), $childCategory->getName(), $categoryProductCount);
                     } else {
-                        $html .= sprintf("<a href=\"%s\" title=\"%s\"%s>%s%s</a>", $this->getCategoryUrl($childCategory), $childCategory->getName(), $this->isActive($childCategory) ? 'class="is-active"' : '', $childCategory->getName(), $categoryProductCount);
+                        $html .= sprintf("<a href=\"%s\" title=\"%s\"%s>%s%s</a>", $this->getCategoryUrl($childCategory, $prefix), $childCategory->getName(), $this->isActive($childCategory) ? 'class="is-active"' : '', $childCategory->getName(), $categoryProductCount);
                     }
 
                     if ($childCategory->hasChildren())
                     {
-                        $html .= $this->getChildCategoryView($childCategory, '', ($level + 1));
+                        $html .= $this->getChildCategoryView($childCategory, '', ($level + 1), $prefix);
                     }
 
                     $html .= '</li>';
