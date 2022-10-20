@@ -2,60 +2,52 @@
 
 namespace Elgentos\CategorySidebar\Block;
 
+use Elgentos\CategorySidebar\Helper\Data;
+use Magento\Catalog\Helper\Category;
+use Magento\Catalog\Helper\Output;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Catalog\Model\Indexer\Category\Flat\State;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\Catalog\Model\ResourceModel\Product;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Data\Tree\Node\Collection;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 
 class CategorySidebar extends Template
 {
 
-    /**
-     * @var \Magento\Catalog\Helper\Category
-     */
-    protected $_categoryHelper;
+    protected Category $_categoryHelper;
+    protected Registry $_coreRegistry;
+    protected State $categoryFlatConfig;
+    protected CategoryFactory $_categoryFactory;
+    protected Product\Collection $_productCollectionFactory;
+    protected Output $helper;
+    private Data $_dataHelper;
+    protected $_scopeConfig;
 
     /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $_coreRegistry;
-
-    /**
-     * @var \Magento\Catalog\Model\Indexer\Category\Flat\State
-     */
-    protected $categoryFlatConfig;
-
-    /**
-     * @var \Magento\Catalog\Model\CategoryFactory
-     */
-    protected $_categoryFactory;
-
-    /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection */
-    protected $_productCollectionFactory;
-
-    /** @var \Magento\Catalog\Helper\Output */
-    private $helper;
-
-    /**
-     * @param Template\Context                                        $context
-     * @param \Magento\Catalog\Helper\Category                        $categoryHelper
-     * @param \Magento\Framework\Registry                             $registry
-     * @param \Magento\Catalog\Model\Indexer\Category\Flat\State      $categoryFlatState
-     * @param \Magento\Catalog\Model\CategoryFactory                  $categoryFactory
-     * @param \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollectionFactory
-     * @param \Magento\Catalog\Helper\Output                          $helper
-     * @param array                                                   $data
+     * @param Context $context
+     * @param Category $categoryHelper
+     * @param Registry $registry
+     * @param State $categoryFlatState
+     * @param CategoryFactory $categoryFactory
+     * @param Product\Collection $productCollectionFactory
+     * @param Output $helper
+     * @param Data $dataHelper
+     * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Catalog\Helper\Category $categoryHelper,
-        \Magento\Framework\Registry $registry,
-        \Magento\Catalog\Model\Indexer\Category\Flat\State $categoryFlatState,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
-		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollectionFactory,
-        \Magento\Catalog\Helper\Output $helper,
-		\Elgentos\CategorySidebar\Helper\Data $dataHelper,
-        $data = [ ]
+        Context              $context,
+        Category             $categoryHelper,
+        Registry             $registry,
+        State                $categoryFlatState,
+        CategoryFactory      $categoryFactory,
+        Product\Collection   $productCollectionFactory,
+        Output               $helper,
+        Data                 $dataHelper,
+        array $data = [ ]
     )
     {
         $this->_categoryHelper           = $categoryHelper;
@@ -69,21 +61,7 @@ class CategorySidebar extends Template
         parent::__construct($context, $data);
     }
 
-    /*
-    * Get owner name
-    * @return string
-    */
-
-    /**
-     * Get all categories
-     *
-     * @param bool $sorted
-     * @param bool $asCollection
-     * @param bool $toLoad
-     *
-     * @return array|\Magento\Catalog\Model\ResourceModel\Category\Collection|\Magento\Framework\Data\Tree\Node\Collection
-     */
-    public function getCategories($sorted = false, $asCollection = false, $toLoad = true)
+    public function getCategories(bool $sorted = false, bool $asCollection = false, bool $toLoad = true): Collection|\Magento\Catalog\Model\ResourceModel\Category\Collection|array
     {
         $status = $this->_scopeConfig->getValue('categorysidebar/general/enabled');
         if($status){
@@ -110,12 +88,7 @@ class CategorySidebar extends Template
         }
     }
 
-    /**
-     * getSelectedRootCategory method
-     *
-     * @return int|mixed
-     */
-    public function getSelectedRootCategory()
+    public function getSelectedRootCategory(): mixed
     {
         $category = $this->_scopeConfig->getValue('categorysidebar/general/category');
 
@@ -131,7 +104,7 @@ class CategorySidebar extends Template
 			$currentCategory = $this->_coreRegistry->registry('current_category');
 			if($currentCategory){
 				$topLevelParent = $currentCategory->getPath();
-				$topLevelParentArray = explode("/", $topLevelParent);
+				$topLevelParentArray = explode("/", (string) $topLevelParent);
 				if(isset($topLevelParent)){
 					return $topLevelParentArray[2];
 				}
@@ -151,16 +124,9 @@ class CategorySidebar extends Template
         return $category;
     }
 
-    /**
-     * @param        $category
-     * @param string $html
-     * @param int    $level
-     *
-     * @return string
-     */
-    public function getChildCategoryView($category, $html = '', $level = 2)
+    public function getChildCategoryView($category, string $html = '', int $level = 2): bool|string
     {
-        $categorydepth = $this->getCatLavel();
+        $categorydepth = $this->getCatLevel();
         if($level > $categorydepth){
            return false;
         }
@@ -187,9 +153,9 @@ class CategorySidebar extends Template
 
                     $html .= '<li class="level' . $level . ($this->isActive($childCategory) ? ' active' : ''). ($this->isEmptyCategory($childCategory->getId()) ? ' empty' : '') . '" data-cat-id="'. $childCategory->getId().'">';
                     if ($this->isEmptyCategory($childCategory->getId())) {
-                        $html .= '<span' . ($this->isActive($childCategory) ? ' class="is-active"' : '') . ' title="'.__('Empty Category').'">' . $childCategory->getName() . $categoryProductCount . '</span>';
+                        $html .= sprintf("<span%s title=\"%s\">%s%s</span>", $this->isActive($childCategory) ? ' class="is-active"' : '', __('Empty Category'), $childCategory->getName(), $categoryProductCount);
                     } else {
-                        $html .= '<a href="' . $this->getCategoryUrl($childCategory) . '" title="' . $childCategory->getName() . '"' . ($this->isActive($childCategory) ? 'class="is-active"' : '') . '>' . $childCategory->getName() . $categoryProductCount . '</a>';
+                        $html .= sprintf("<a href=\"%s\" title=\"%s\"%s>%s%s</a>", $this->getCategoryUrl($childCategory), $childCategory->getName(), $this->isActive($childCategory) ? 'class="is-active"' : '', $childCategory->getName(), $categoryProductCount);
                     }
 
                     if ($childCategory->hasChildren())
@@ -206,16 +172,7 @@ class CategorySidebar extends Template
         return $html;
     }
 
-    /**
-     * Retrieve subcategories
-     * DEPRECATED
-	 *
-     * @param $category
-     *
-     * @return array
-     */
-
-    public function getSubcategories($category)
+    public function getSubcategories($category): array
     {
         if ( $this->categoryFlatConfig->isFlatEnabled() && $category->getUseFlatResource() )
         {
@@ -225,15 +182,7 @@ class CategorySidebar extends Template
         return $category->getChildren();
     }
 
-
-    /**
-     * Get current category
-     *
-     * @param \Magento\Catalog\Model\Category $category
-     *
-     * @return Category
-     */
-    public function isActive($category)
+    public function isActive(\Magento\Catalog\Model\Category $category): Category|bool
     {
         $activeCategory = $this->_coreRegistry->registry('current_category');
         $activeProduct  = $this->_coreRegistry->registry('current_product');
@@ -266,18 +215,11 @@ class CategorySidebar extends Template
         }
 
         // Fallback - If Flat categories is not enabled the active category does not give an id
-        return (($this->getCategoryUrl($activeCategory) == $this->getCategoryUrl($category)) ? true : false); // compare by URL
+        return $this->getCategoryUrl($activeCategory) == $this->getCategoryUrl($category); // compare by URL
         //return (($category->getName() == $activeCategory->getName()) ? true : false); // compare by name
     }
 
-    /**
-     * Return Category Id for $category object
-     *
-     * @param $category
-     *
-     * @return string
-     */
-    public function getCategoryUrl($category)
+    public function getCategoryUrl($category): string
     {
         return $this->_categoryHelper->getCategoryUrl($category);
     }
@@ -295,7 +237,7 @@ class CategorySidebar extends Template
         }
     }
 
-    public function getCategoryProductCount($categoryId)
+    public function getCategoryProductCount($categoryId): int
     {
         $category = $this->_categoryFactory->create()->load($categoryId);
         if($category){
@@ -310,7 +252,7 @@ class CategorySidebar extends Template
         return $this->_scopeConfig->getValue('categorysidebar/general/title');
     }
 
-    public function getCatLavel()
+    public function getCatLevel()
     {
         return $this->_scopeConfig->getValue('categorysidebar/general/categorydepth');
     }
@@ -320,7 +262,8 @@ class CategorySidebar extends Template
         return $this->_scopeConfig->getValue('categorysidebar/general/productcount');
     }
 
-    public function getCurrentCategoryPath() {
+    public function getCurrentCategoryPath(): string
+    {
         $activeCategory = $this->_coreRegistry->registry('current_category');
 
         if (!$activeCategory) {
@@ -330,9 +273,10 @@ class CategorySidebar extends Template
         return $activeCategory->getPath();
     }
 
-    public function getPathSegment($path = null, $segmentNumber = null) {
+    public function getPathSegment($path = null, $segmentNumber = null): ?string
+    {
         if ($path != null && $segmentNumber != null) {
-            $segment = explode('/', $path);
+            $segment = explode('/', (string) $path);
             return $segment[$segmentNumber - 1];
         }
         return null;
