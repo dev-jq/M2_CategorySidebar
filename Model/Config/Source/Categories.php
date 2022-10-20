@@ -1,18 +1,8 @@
 <?php
 
-/**
- * @author JQ
- * @copyright Copyright (c) 2022 JQ
- * @package JQ_CategorySidebar
-*/
 
-namespace JQ\CategorySidebar\Model\Config\Source;
+namespace Elgentos\CategorySidebar\Model\Config\Source;
 
-/**
- * Class:Categories
- * JQ\CategorySidebar\Model\Config\Source
- *
- */
 class Categories implements \Magento\Framework\Option\ArrayInterface {
 
     /**

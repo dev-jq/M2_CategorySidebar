@@ -2,11 +2,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="jq91" translate="label" sortOrder="1">
-            <label>JQ</label>
+        <tab id="elgentos" translate="label" sortOrder="1">
+            <label>Elgentos</label>
         </tab>
         <section id="categorysidebar" showInDefault="1" sortOrder="2">
-            <tab>jq91</tab>
+            <tab>elgentos</tab>
             <label>Category Sidebar</label>
             <resource>Magento_Config::config</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -23,7 +23,7 @@
 
                 <field id="category" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Select Category Sidebar</label>
-                    <source_model>JQ\CategorySidebar\Model\Config\Source\Categories</source_model>
+                    <source_model>Elgentos\CategorySidebar\Model\Config\Source\Categories</source_model>
                 </field>
 
                 <field id="productcount" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -33,7 +33,7 @@
 
                 <field id="categorydepth" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Select Category Depth</label>
-                    <source_model>JQ\CategorySidebar\Model\Config\Source\Depth</source_model>
+                    <source_model>Elgentos\CategorySidebar\Model\Config\Source\Depth</source_model>
                 </field>
             </group>
         </section>
