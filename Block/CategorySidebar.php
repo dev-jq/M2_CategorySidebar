@@ -182,7 +182,7 @@ class CategorySidebar extends Template
         return $category->getChildren();
     }
 
-    public function isActive(\Magento\Catalog\Model\Category $category): Category|bool
+    public function isActive($category): mixed
     {
         $activeCategory = $this->_coreRegistry->registry('current_category');
         $activeProduct  = $this->_coreRegistry->registry('current_product');
