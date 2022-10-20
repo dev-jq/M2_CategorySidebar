@@ -1,12 +1,6 @@
 <?php
 
-/**
- * @author JQ
- * @copyright Copyright (c) 2022 JQ
- * @package JQ_CategorySidebar
-*/
-
-namespace JQ\CategorySidebar\Model\Config\Source;
+namespace Elgentos\CategorySidebar\Model\Config\Source;
 
 class Depth implements \Magento\Framework\Option\ArrayInterface {
 

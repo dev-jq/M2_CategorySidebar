@@ -2,11 +2,11 @@
 /**
  * Category sidebar
  *
- * @var $block JQ\CategorySidebar\Block\CategorySidebar
+ * @var $block Elgentos\CategorySidebar\Block\CategorySidebar
  */
 ?>
 
-<?php $helper = $this->helper('JQ\CategorySidebar\Helper\Data'); ?>
+<?php $helper = $this->helper('Elgentos\CategorySidebar\Helper\Data'); ?>
 <?php $categories = $block->getCategories(); ?>
 <?php if($categories) : ?>
     <?php $categoryBlockTitle = $this->getCatTitle(); ?>

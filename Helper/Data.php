@@ -1,12 +1,6 @@
 <?php
 
-/**
- * @author JQ
- * @copyright Copyright (c) 2022 JQ
- * @package JQ_CategorySidebar
- */
-
-namespace JQ\CategorySidebar\Helper;
+namespace Elgentos\CategorySidebar\Helper;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 

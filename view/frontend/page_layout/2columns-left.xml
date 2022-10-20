@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
-    <update handle="2columns-left"/>
-    <referenceContainer name="sidebar.main">
-        <block class="JQ\CategorySidebar\Block\CategorySidebar" name="category-sidebar" template="JQ_CategorySidebar::category-sidebar.phtml" />
-    </referenceContainer>
-    <move element="catalog.leftnav" destination="sidebar.main" after="category-sidebar"/>
-</layout>

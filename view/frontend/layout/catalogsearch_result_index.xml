@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="JQ_CategorySidebar::css/module.css" />
+        <css src="Elgentos_CategorySidebar::css/module.css" />
     </head>
     <body>
-        <referenceBlock name="category-sidebar" template="JQ_CategorySidebar::category-sidebar-search.phtml" />
+        <referenceBlock name="category-sidebar" template="Elgentos_CategorySidebar::category-sidebar-search.phtml" />
         <move element="category-sidebar" destination="sidebar.main" before="catalogsearch.leftnav" />
     </body>
 </page>

@@ -1,5 +1,5 @@
 {
-    "name": "jq-dev/module-category-sidebar",
+    "name": "elgentos/magento2-category-sidebar",
     "description": "Magento 2 Module to display category tree in sidebar",
     "minimum-stability": "stable",
     "require": {
@@ -7,14 +7,14 @@
     },
     "authors":[
         {
-            "name":"JQ"
+            "name":"Elgentos"
         }
     ],
     "type": "magento2-module",
     "version": "2.0.1",
     "autoload": {
         "psr-4": {
-            "JQ\\CategorySidebar\\": ""
+            "Elgentos\\CategorySidebar\\": ""
         },
         "files": [
             "registration.php"

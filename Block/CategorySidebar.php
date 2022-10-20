@@ -1,25 +1,11 @@
 <?php
 
-/**
- * @author JQ
- * @copyright Copyright (c) 2022 JQ
- * @package JQ_CategorySidebar
-*/
-
-namespace JQ\CategorySidebar\Block;
+namespace Elgentos\CategorySidebar\Block;
 
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\View\Element\Template;
 
-/**
- * Class:CategorySidebar
- * JQ\CategorySidebar\Block
- *
- * @author      JQ
- * @package     JQ\CategorySidebar
- * @copyright   Copyright (c) 2022, JQ. All rights reserved
- */
 class CategorySidebar extends Template
 {
 
@@ -68,7 +54,7 @@ class CategorySidebar extends Template
 		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollectionFactory,
         \Magento\Catalog\Helper\Output $helper,
-		\JQ\CategorySidebar\Helper\Data $dataHelper,
+		\Elgentos\CategorySidebar\Helper\Data $dataHelper,
         $data = [ ]
     )
     {
