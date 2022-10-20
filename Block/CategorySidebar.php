@@ -219,9 +219,14 @@ class CategorySidebar extends Template
         //return (($category->getName() == $activeCategory->getName()) ? true : false); // compare by name
     }
 
-    public function getCategoryUrl($category): string
+    public function getCategoryUrl($category, $prefix = null): string
     {
-        return $this->_categoryHelper->getCategoryUrl($category);
+        $fullUrl = $this->_categoryHelper->getCategoryUrl($category);
+        if (is_null($prefix)) {
+            return $fullUrl;
+        }
+
+        return str_replace($this->_storeManager->getStore()->getBaseUrl(), $prefix, $fullUrl);
     }
 
     public function isEmptyCategory($categoryId)
