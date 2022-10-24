@@ -220,7 +220,7 @@ class CategorySidebar extends Template
         //return (($category->getName() == $activeCategory->getName()) ? true : false); // compare by name
     }
 
-    public function getCategoryUrl($category, $prefix = null): string
+    public function getCategoryUrl($category, $prefix = null): array|string
     {
         $fullUrl = $this->_categoryHelper->getCategoryUrl($category);
         if (is_null($prefix)) {
