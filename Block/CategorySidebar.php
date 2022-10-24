@@ -61,9 +61,10 @@ class CategorySidebar extends Template
         parent::__construct($context, $data);
     }
 
-    public function getCategories(bool $sorted = false, bool $asCollection = false, bool $toLoad = true): Collection|\Magento\Catalog\Model\ResourceModel\Category\Collection|array
+    public function getCategories(bool $sorted = false, bool $asCollection = false, bool $toLoad = true): array
     {
         $status = $this->_scopeConfig->getValue('categorysidebar/general/enabled');
+
         if($status){
             $cacheKey = sprintf('%d-%d-%d-%d', $this->getSelectedRootCategory(), $sorted, $asCollection, $toLoad);
             if ( isset($this->_storeCategories[ $cacheKey ]) )
@@ -88,7 +89,7 @@ class CategorySidebar extends Template
         }
     }
 
-    public function getSelectedRootCategory(): mixed
+    public function getSelectedRootCategory(): bool
     {
         $category = $this->_scopeConfig->getValue('categorysidebar/general/category');
 
@@ -182,7 +183,7 @@ class CategorySidebar extends Template
         return $category->getChildren();
     }
 
-    public function isActive($category): mixed
+    public function isActive($category): bool
     {
         $activeCategory = $this->_coreRegistry->registry('current_category');
         $activeProduct  = $this->_coreRegistry->registry('current_product');
@@ -229,7 +230,7 @@ class CategorySidebar extends Template
         return str_replace($this->_storeManager->getStore()->getBaseUrl(), $prefix, $fullUrl);
     }
 
-    public function isEmptyCategory($categoryId)
+    public function isEmptyCategory($categoryId): bool
     {
         $category = $this->_categoryFactory->create()->load($categoryId);
         if($category){
@@ -252,17 +253,17 @@ class CategorySidebar extends Template
         return 0;
     }
 
-    public function getCatTitle()
+    public function getCatTitle(): bool
     {
         return $this->_scopeConfig->getValue('categorysidebar/general/title');
     }
 
-    public function getCatLevel()
+    public function getCatLevel(): int
     {
         return $this->_scopeConfig->getValue('categorysidebar/general/categorydepth');
     }
 
-    public function getShowProductCount()
+    public function getShowProductCount(): bool
     {
         return $this->_scopeConfig->getValue('categorysidebar/general/productcount');
     }
