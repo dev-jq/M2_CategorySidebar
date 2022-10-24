@@ -125,7 +125,7 @@ class CategorySidebar extends Template
         return $category;
     }
 
-    public function getChildCategoryView($category, string $html = '', int $level = 2, $prefix = null): bool|string
+    public function getChildCategoryView($category, string $html = '', int $level = 2, $prefix = null): mixed
     {
         $categorydepth = $this->getCatLevel();
         if($level > $categorydepth){
@@ -220,7 +220,7 @@ class CategorySidebar extends Template
         //return (($category->getName() == $activeCategory->getName()) ? true : false); // compare by name
     }
 
-    public function getCategoryUrl($category, $prefix = null): array|string
+    public function getCategoryUrl($category, $prefix = null): mixed
     {
         $fullUrl = $this->_categoryHelper->getCategoryUrl($category);
         if (is_null($prefix)) {
