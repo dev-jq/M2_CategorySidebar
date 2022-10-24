@@ -89,7 +89,7 @@ class CategorySidebar extends Template
         }
     }
 
-    public function getSelectedRootCategory(): bool
+    public function getSelectedRootCategory(): int
     {
         $category = $this->_scopeConfig->getValue('categorysidebar/general/category');
 
