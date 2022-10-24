@@ -61,7 +61,7 @@ class CategorySidebar extends Template
         parent::__construct($context, $data);
     }
 
-    public function getCategories(bool $sorted = false, bool $asCollection = false, bool $toLoad = true): array
+    public function getCategories(bool $sorted = false, bool $asCollection = false, bool $toLoad = true): mixed
     {
         $status = $this->_scopeConfig->getValue('categorysidebar/general/enabled');
 
@@ -173,7 +173,7 @@ class CategorySidebar extends Template
         return $html;
     }
 
-    public function getSubcategories($category): array
+    public function getSubcategories($category): mixed
     {
         if ( $this->categoryFlatConfig->isFlatEnabled() && $category->getUseFlatResource() )
         {
@@ -215,9 +215,7 @@ class CategorySidebar extends Template
             return true;
         }
 
-        // Fallback - If Flat categories is not enabled the active category does not give an id
-        return $this->getCategoryUrl($activeCategory) == $this->getCategoryUrl($category); // compare by URL
-        //return (($category->getName() == $activeCategory->getName()) ? true : false); // compare by name
+        return $this->getCategoryUrl($activeCategory) == $this->getCategoryUrl($category); 
     }
 
     public function getCategoryUrl($category, $prefix = null): mixed
