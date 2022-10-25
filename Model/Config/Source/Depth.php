@@ -2,14 +2,12 @@
 
 namespace Elgentos\CategorySidebar\Model\Config\Source;
 
-class Depth implements \Magento\Framework\Option\ArrayInterface {
+use Magento\Framework\Option\ArrayInterface;
 
-    /**
-     * Return array of options as value-label pairs
-     *
-     * @return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
-     */
-    public function toOptionArray()
+class Depth implements ArrayInterface {
+
+
+    public function toOptionArray(): array
     {
         return [
             [

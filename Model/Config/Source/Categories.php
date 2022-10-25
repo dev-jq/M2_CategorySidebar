@@ -3,35 +3,20 @@
 
 namespace Elgentos\CategorySidebar\Model\Config\Source;
 
+use Magento\Catalog\Model\CategoryFactory;
+
 class Categories implements \Magento\Framework\Option\ArrayInterface {
 
-    /**
-     * Store categories cache
-     *
-     * @var array
-     */
-    protected $_storeCategories = [];
-    /**
-     * @var \Magento\Catalog\Model\CategoryFactory
-     */
-    private $_categoryFactory;
+    protected array $_storeCategories = [];
+    private CategoryFactory $_categoryFactory;
 
-    /**
-     * Categories constructor.
-     *
-     * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
-     */
-    public function __construct(\Magento\Catalog\Model\CategoryFactory $categoryFactory)
+
+    public function __construct(CategoryFactory $categoryFactory)
     {
         $this->_categoryFactory = $categoryFactory;
     }
 
-    /**
-     * Return array of options as value-label pairs
-     *
-     * @return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
-     */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         $cacheKey = sprintf('%d-%d-%d-%d', 1, false, false, true);
         if (isset($this->_storeCategories[$cacheKey])) {

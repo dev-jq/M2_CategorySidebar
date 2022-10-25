@@ -3,45 +3,35 @@
 namespace Elgentos\CategorySidebar\Helper;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper
+class Data extends AbstractHelper
 {
     const XML_PATH_ENABLED                      = 'general/enabled';
     const XML_PATH_CATEGORY                     = 'general/category';
     const XML_PATH_CATEGORY_DEPTH_LEVEL         = 'general/categorydepth';
 
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $_scopeConfig;
+    protected ScopeConfigInterface $_scopeConfig;
+    protected $scopeConfig;
 
     /**
-     * @param \Magento\Framework\App\Helper\Context $context
+     * @param Context $context
      * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(\Magento\Framework\App\Helper\Context $context, ScopeConfigInterface $scopeConfig
+    public function __construct(Context $context, ScopeConfigInterface $scopeConfig
     ) {
         $this->_scopeConfig = $scopeConfig;
         parent::__construct($context);
     }
 
-    /**
-     * @param $xmlPath
-     * @param string $section
-     *
-     * @return string
-     */
-    public function getConfigPath($xmlPath, $section = 'categorysidebar')
+
+    public function getConfigPath($xmlPath, string $section = 'categorysidebar'): string
     {
         return $section . '/' . $xmlPath;
     }
 
-	 /**
-     * Check if enabled
-     *
-     * @return string|null
-     */
-    public function isEnabled()
+    public function isEnabled(): ?string
     {
         return $this->scopeConfig->getValue(
             $this->getConfigPath(self::XML_PATH_ENABLED),
@@ -54,7 +44,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @return string|null
      */
-    public function getSidebarCategory()
+    public function getSidebarCategory(): ?string
     {
         return $this->scopeConfig->getValue(
             $this->getConfigPath(self::XML_PATH_CATEGORY),
@@ -67,7 +57,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @return string|null
      */
-    public function getCategoryDepthLevel()
+    public function getCategoryDepthLevel(): ?string
     {
         return $this->scopeConfig->getValue(
             $this->getConfigPath(self::XML_PATH_CATEGORY_DEPTH_LEVEL),
