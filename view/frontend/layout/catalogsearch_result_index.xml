@@ -4,7 +4,7 @@
         <css src="Elgentos_CategorySidebar::css/module.css" />
     </head>
     <body>
-        <referenceBlock name="category-sidebar" template="Elgentos_CategorySidebar::category-sidebar-search.phtml" />
+        <block class="Elgentos\CategorySidebar\Block\CategorySidebar" name="category-sidebar" template="Elgentos_CategorySidebar::category-sidebar-search.phtml" />
         <move element="category-sidebar" destination="sidebar.main" before="catalogsearch.leftnav" />
     </body>
 </page>
