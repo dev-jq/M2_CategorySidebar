@@ -1,0 +1,17 @@
+<?php
+/**
+ * Category sidebar
+ *
+ * @var $block Elgentos\CategorySidebar\Block\CategorySidebar
+ */
+
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+
+?>
+
+<p><?= $escaper->escapeHtml($block->getCategory()->getName()) ?></p>

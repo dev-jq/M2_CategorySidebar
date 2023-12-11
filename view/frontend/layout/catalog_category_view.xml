@@ -3,8 +3,12 @@
     <head>
         <css src="Elgentos_CategorySidebar::css/module.css" />
     </head>
-    <referenceContainer name="sidebar.main">
-        <block class="Elgentos\CategorySidebar\Block\CategorySidebar" name="category-sidebar" template="Elgentos_CategorySidebar::category-sidebar.phtml" />
-    </referenceContainer>
-    <move element="catalog.leftnav" destination="sidebar.main" after="category-sidebar"/>
+    <body>
+        <referenceContainer name="sidebar.main">
+            <block class="Elgentos\CategorySidebar\Block\CategorySidebar" name="category-sidebar" template="Elgentos_CategorySidebar::category-sidebar.phtml">
+                <block name="subcategory-sidebar" template="Elgentos_CategorySidebar::subcategory-sidebar.phtml" />
+            </block>
+        </referenceContainer>
+        <move element="catalog.leftnav" destination="sidebar.main" after="category-sidebar"/>
+    </body>
 </page>

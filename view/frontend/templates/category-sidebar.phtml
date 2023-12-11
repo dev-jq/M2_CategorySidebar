@@ -36,6 +36,7 @@
                             <?= $category->getName().$categoryProductCount; ?>
                         </a>
                         <?= $block->getChildCategoryView($category); ?>
+                        <?= $block->getChildBlock(); ?>
                     </li>
                 <?php elseif($helper->getSidebarCategory() != 'current_category_branch_only'): ?>
                     <li class="level1<?= ($block->isActive($category) ? ' active' : ''); ?>" data-cat-id="<?= $category->getId(); ?>">
